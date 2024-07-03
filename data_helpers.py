@@ -5,6 +5,7 @@ import random
 
 
 def generate_optimal_episode(obstacle_position, floor_height):
+    """Generates one optimal episode with the specified environment config"""
     env = JumpTaskEnv(scr_w=60, scr_h=60, slow_motion=False, rendering=False)
     state = env._reset(obstacle_position=obstacle_position, floor_height=floor_height)
 
@@ -30,6 +31,7 @@ def generate_optimal_episode(obstacle_position, floor_height):
 
 
 def generate_imitation_data():
+    """Generates perfect episodes for each environment configuration in the experiment space"""
     imitation_data = {}
     for obs_pos in range(20, 46):
         imitation_data[obs_pos] = {}
@@ -47,6 +49,7 @@ def generate_training_positions(min_obstacle_position=20,
                                 positions_train_diff=5,
                                 heights_train_diff=5,
                                 random_tasks=False):
+    """Generates Training set positions, default parameterr correspond to 'wide' grid"""
     if random_tasks:
         obstacle_positions = list(range(min_obstacle_position, max_obstacle_position + 1))
         floor_heights = list(range(min_floor_height, max_floor_height + 1))
@@ -86,6 +89,7 @@ def prepare_observation_target_data(positions, imitation_data):
 
 
 def generate_augmented_data_horiz(observations, actions, max_shift_left=3, max_shift_right=3):
+    """Generates augmented dataset from given dataset, shifting horizontally in pixel space"""
     x_augmented, y_augmented = [], []
     for observation, action in zip(observations, actions):
         x_augmented.append(observation)
@@ -107,6 +111,7 @@ def generate_augmented_data_horiz(observations, actions, max_shift_left=3, max_s
 
 
 def generate_augmented_data_vert(observations, actions, max_shift_up=3, max_shift_down=3):
+    """Generates augmented dataset from given dataset, shifting vertically in pixel space"""
     x_augmented, y_augmented = [], []
     for observation, action in zip(observations, actions):
         x_augmented.append(observation)
@@ -128,6 +133,7 @@ def generate_augmented_data_vert(observations, actions, max_shift_up=3, max_shif
 
 
 def generate_validation_positions_adjacent(training_positions, min_pos=20, min_height=10, max_pos=45, max_height=20):
+    """Generates adjacent positions for validation set based on given training positions"""
     validation_positions = []
     for (obs_pos, floor_height) in training_positions:
         neighbouring_configs = [(obs_pos, floor_height - 1), (obs_pos, floor_height + 1), (obs_pos - 1, floor_height),
@@ -140,8 +146,8 @@ def generate_validation_positions_adjacent(training_positions, min_pos=20, min_h
 
 
 def generate_validation_positions_random(training_positions, min_pos=20, min_height=10, max_pos=45, max_height=20, n_positions=54):
+    """Generates random positions for validation set based on given training positions"""
     validation_positions = []
-
     for i in range(n_positions):
         found_pos = False
 
@@ -157,6 +163,7 @@ def generate_validation_positions_random(training_positions, min_pos=20, min_hei
 
 
 def calculate_sampler_weights(targets):
+    """Calculates custom sampler weights based on the given target distribution"""
     class_sample_count = np.array([len(np.where(targets == action)[0]) for action in np.unique(targets)])
     weight = 1. / class_sample_count
     samples_weight = np.array([weight[action] for action in targets])

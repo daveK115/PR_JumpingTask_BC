@@ -4,6 +4,7 @@ from jumping_task import JumpTaskEnv
 
 
 def test_agent(model, device, training_positions, validation_positions=[], print_out=False):
+    """Test given model on all environments"""
     model.eval()
     env = JumpTaskEnv(scr_w=60, scr_h=60, slow_motion=False, rendering=False)
     completed_total = 0

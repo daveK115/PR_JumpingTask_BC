@@ -3,6 +3,7 @@ import numpy as np
 
 
 def conv_output_shape(h_w, kernel_size=1, stride=1, pad=0, dilation=1):
+    """Calculate convolution output dimensions"""
     from math import floor
     if type(kernel_size) is not tuple:
         kernel_size = (kernel_size, kernel_size)
@@ -12,6 +13,7 @@ def conv_output_shape(h_w, kernel_size=1, stride=1, pad=0, dilation=1):
 
 
 def get_device():
+    """Get device to use for torch"""
     if torch.cuda.is_available():
         dev = "cuda:0"
     else:
@@ -29,6 +31,7 @@ def setup_seed(seed=42):
 
 
 def print_positions(training_positions, validation_positions):
+    """Print out training and validation positions in environment space"""
     for floor_height in range(10, 21):
         grid = ''
         for obs_pos in range(20, 46):

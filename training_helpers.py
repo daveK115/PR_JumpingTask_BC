@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 
 
 def train_model(model, optimizer, criterion, num_epochs, dataloader_train, dataloader_val, validate=False, print_out=False, draw_plot=False):
+    """Main training loop"""
     losses = []
     val_accuracies = []
     max_val_accuracy = 0.0
-    saved_model_loss = float("inf")
     wandb.run.summary["act_epochs"] = num_epochs
     for epoch in range(num_epochs):
         model.train()
@@ -88,7 +88,7 @@ def train_model(model, optimizer, criterion, num_epochs, dataloader_train, datal
 
 # deprecated
 def dropout_grid_search(dropout_rates_conv, dropout_rates_fc, dataloader):
-    results = {}
+    """Early dropout grid search, deprecated"""
     for rate_conv in dropout_rates_conv:
         for rate_fc in dropout_rates_fc:
             model = SimpleModelV3(rate_conv, rate_fc)
@@ -101,7 +101,6 @@ def dropout_grid_search(dropout_rates_conv, dropout_rates_fc, dataloader):
                     output = model(data)
                     loss = criterion(output, target)
                     loss.backward()
-                    #losses.append(loss.item())
                     optimizer.step()
 
             print(f'rate_conv: {rate_conv}, rate_fc: {rate_fc}, Loss: {loss.item()}')
@@ -109,6 +108,7 @@ def dropout_grid_search(dropout_rates_conv, dropout_rates_fc, dataloader):
 
 # deprecated
 def hyperparameter_grid_search(parameter_grid, train_loader, val_loader, validation_interval=10):
+    """Early hyperparameter grid search, deprecated"""
     criterion = nn.CrossEntropyLoss()
     best_accuracy = 0
     best_params = {}
